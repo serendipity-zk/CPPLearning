@@ -229,7 +229,7 @@ for (for-init-statement condition; expression)
 
 #### 运算优先级
 
-前置++ 前置--  * （从右向左）同级，高于
+前置++ 前置--  * （从右向左）同级，低于
 
 后置++ 后置--（从左向右）
 
@@ -267,8 +267,8 @@ clock_t start = clock()
 
 #### cin.get
 
-1. char = cin.get() 获取下一个字符
-2. cin.get(char) 获取下个字符
+1. char = cin.get() 获取下一个字符 eof时，char里面是eof
+2. cin.get(char) 获取下个字符，eof时，char什么都没有
 3. cin.get(char[], size) 获取一行
 
 #### 套路
@@ -278,4 +278,52 @@ while (cin>>x[i++]); i--;
 while (cin.get(char[i++])); i--;
 while ((char[i++]=cin.get())!=EOF); i--;
 ```
+
+# 第6章
+
+#### 右值放左边
+
+#### || && ： 也是顺序点
+
+#### 短路优秀
+
+#### cctype 提供字符判断函数
+
+#### goto
+
+```c++
+goto label;
+label: int x;
+```
+
+#### 错误处理
+
+```c++
+while (!(cin>>x))
+{
+    cin.clear();
+    while (cin.get()|= '\n');
+}
+```
+
+#### fstream
+
+和iostream 几乎一样， 包括setf
+
+```c++
+ifstream inFile;
+inFile.open ("a.txt");
+if (!inFile.is_open()){
+    exit(1);
+}
+while (inFile >> x);
+if (inFile.eof())
+    //结束
+else if (inFile.fail())
+    //不匹配的输入
+else 
+    //其他
+```
+
+# adfasf
 
