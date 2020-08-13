@@ -325,5 +325,50 @@ else
     //其他
 ```
 
-# adfasf
+# 第7章
+
+### const
+
+```c++
+    int *const p = new int{10};    
+	int *const *t2 = &p;
+```
+
+t2是指向可变的某一个（指向某一个不变的位置的可变整数的指针）指针
+
+上面有的const一个不能少
+
+下面多出来的const必须从const到倒数第二个不间断才能赋值
+
+### 有关宏定义的comment
+
+宏定义整数不一定被解释为整数，也就是说，并未定死数据类型，在函数匹配中可被认为long， void * int* 等等
+
+函数指针
+
+```c++
+double (*pf) (int);
+double func (int);
+pf= func;
+double y = pf(8);
+double y = (*pf)(8)
+```
+
+把右边（）看作运算符
+
+pf(int) : 如果给pf一个int参数，那么返回前面的
+
+pf[3]: pf 是一个数组，其中每一个是
+
+*pf 对pf解除引用后是，也就是说，pf是指向（）的指针
+
+
+
+# 第8章
+
+### 内联函数
+
+在定义或者声明加上inline
+
+好于define
 
