@@ -372,3 +372,233 @@ pf[3]: pf 是一个数组，其中每一个是
 
 好于define
 
+### 引用
+
+const引用才能创建临时变量
+
+#### 临时变量条件
+
+参数类型正确，不是左值
+
+参数类型不正确，但可以转换
+
+#### 返回引用不能返回被销毁的
+
+#### 返回引用要注意这个可以被赋值
+
+#### 基类引用可以引用派生类
+
+### 格式化输出套路
+
+```c++
+ios_base::fmtflags init ;
+init = cout.setf(ios_base::fixed);
+cout.precision (0);
+os.setf(init);
+```
+
+### 默认参数
+
+定义在原型中
+
+```c++
+int f ( int n, int m=3,int p=0);
+```
+
+不能跳过一直到最后
+
+### 函数重载
+
+#### 引用与否不作为特征标 特征标只包括自变量
+
+#### 重载引用
+
+```c++
+void f(int &);
+void f (int &&);
+void f (const int &);
+```
+
+如果没有第二个，那么右值会自动到第三个
+
+#### 可以使用默认参数减少重载
+
+### 函数模板
+
+```c++
+template <typename T>//or class T
+void f (T&a,T&b);
+```
+
+#### 函数模板重载
+
+```c++
+template <typename T>//or class T
+void f (T&a,T&b,int t);
+...
+template <typename T>//or class T
+void f (T&a,T&b,int t){
+    
+}
+```
+
+#### 显式具体化 
+
+```c++
+template<>
+void f <MyClass> (MyClass &a,MyClass &b);
+template<>
+void f (MyClass &a,MyClass &b);
+...
+template<>
+void f (MyClass &a,MyClass &b)
+{
+    
+}
+```
+
+#### 显式实例化
+
+一般由编译器经行隐式实例化
+
+显式实例化可以要求编译器立刻实例化这个函数
+
+```c++
+template void f <int> (int &a ,int &b);
+```
+
+意思是立即用原来的模板生成int的版本
+
+显式具体化提供不同的，新的函数实现，而显式实例化只是照着模板生成了一份
+
+代码中也可以显式实例化
+
+```c++
+f<int>(a,b);
+```
+
+
+
+### 重载解析
+
+####  const
+
+const的区别只存在于指针和引用中，否则二义性
+
+#### 更具体的更好
+
+#### 用f<>强制建议使用模板的版本
+
+#### decltype和后置返回类型
+
+通过表达式或者变量推断出类型
+
+```c++
+template <typename T>//or class T
+auto f (T&a,T&b)-> decltype (a+b);
+```
+
+ https://mp.weixin.qq.com/s?__biz=MzI2OTA3NTk3Ng==&mid=2649284296&idx=1&sn=7bbce919d0c7f2f6f62623d7054a8dbc&chksm=f2f9adafc58e24b9db5a46249d0a3364265065e075f0e6066ee0e8a064aefc8c23ab3710a826&scene=21#wechat_redirect 
+
+# 第9章
+
+### 头文件
+
+- 函数原型
+- #define 和Const
+- 结构声明
+- 类声明
+- 模板
+- 内联函数
+
+ ### extern
+
+声明：
+
+```c++
+extern int a;
+```
+
+定义：
+
+```c++
+extern int b = 0;
+int c;
+```
+
+想要使用被隐藏的全局：
+
+```c++
+:: name
+```
+
+#### const 特例
+
+const自动成为static 内部链接性 想要外部需要特别加上extern，另外的变量自动链接性为外部
+
+所以可以放心的把const放在头文件
+
+```c++
+//想要外部链接性
+extern const int c = 10;
+```
+
+
+
+### 说明符和限定符
+
+#### mutable
+
+当类或者结构是const时也允许改变
+
+### 函数链接性
+
+默认外部， static 内部
+
+### 语言链接性
+
+通过不同命名标准来寻找函数
+
+```c++
+extern "C" void f();
+extern "C++" void f ();
+//默认C++
+```
+
+### 动态存储
+
+#### 小括号初始化 列表初始化
+
+#### new 运算符
+
+```c++
+void  * operator new (std::size_t);
+void  * operator new[] (std::size_t);
+```
+
+#### 定位new运算符
+
+```c++
+#include <new>
+char * buffer1 =  new char [200];
+int * p1= new (buffer1) int[20]; 
+```
+
+### 命名空间
+
+using声明类似于变量定义
+
+using编译指令相当于全局变量，使得变量可用，但可以被局部变量隐藏
+
+用声明更好些，因为如果有冲突会提示
+
+using上层也会using所有下层
+
+```c++
+namespace anothername = OldNameSpace::InsideSpace
+```
+
+未命名的命名空间等效于内部链接性静态变量
+
+using一个重载了的函数将导入所有版本
+
