@@ -602,3 +602,139 @@ namespace anothername = OldNameSpace::InsideSpace
 
 using一个重载了的函数将导入所有版本
 
+# 第10章
+
+### 方法只有一个副本，作用在不同对象
+
+### 初始化
+
+```c++
+MyClass t = MyClass (1,1,1);
+MyClass t (1,1,1);
+MyClass t = {1,1,1};
+MyClass t {1,1,1};
+MyClass t;
+MyClass t (); //这是函数，而不是初始化
+```
+
+### Const
+
+```c++
+void show() const;
+void MyClass::show() const{
+    
+}
+```
+
+### 返回的时候注意返回引用或者副本
+
+### 想要创建数组必须要默认构造函数
+
+### 定义const 直接定义即可
+
+```c++
+class myclass
+{
+public:
+    int x;
+    const int y = 3;
+};
+```
+
+### 作用域内枚举
+
+```c++
+enum class myenum {First,Second=4};
+myenum x = myenum:: First;
+enum class : short myshortenum { First};//指定为short的底层
+```
+
+普通枚举可以隐式转换为整数，但是这种不行
+
+都不能由int隐式转来
+
+# 第11章
+
+### 运算符重载
+
+```c++
+total = x+y;
+total = x.operator+(y);
+Class t{
+    public:
+    t operator+(const t& v ) const;
+}
+t t::operator+(const t& v ) const
+{
+    
+}
+```
+
+### 友元
+
+不是类函数，和类函数完全无关，只是一个能访问内部变量的常规函数
+
+```c++
+Class MyClass {
+    friend MyClass operator+ (const MyClass , int);
+}
+MyClass operator+ (const MyClass t , int x){
+    
+}//定义中不能使用friend
+```
+
+#### cout 套路
+
+```c++
+Class MyClass {
+    friend ostream& operator<< (ostream& ,const MyClass&);
+}
+ostream& operator<< (ostream& os,const MyClass& t);{
+    os<<t.values;
+    return os;
+}
+```
+
+### 随机数
+
+```c++
+#include <cstdlib>
+#include <ctime>
+std::srand (time(0));
+std::rand()% x
+```
+
+### 类型转换
+
+#### 从其他转成类
+
+一个参数的构造函数
+
+- 初始化时
+- 其他赋给类时
+- 其他调用了传递类的参数时
+- 试图用其他类型代替类返回时
+- 在任何一种情况下，使用可以自动转换的内置类型时（二次转换）
+
+#### 转换到其他类型（转换函数）
+
+```c++
+Class MyClass{
+    double x;
+    operator double();
+}
+MyClass operator double(){
+    return x;
+}
+```
+
+#### 重点：没有二义性
+
+#### explicit 或者用非成员函数
+
+#### 类函数+， 1000+class 错误
+
+不会自动把1000 转换为class
+
+#### 友元函数更能自动适应类型转换
+

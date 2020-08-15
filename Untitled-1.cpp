@@ -1,8 +1,17 @@
 #include <iostream>
 #define N 0
 using namespace std;
+class myclass
+{
+public:
+    int x;
+    const int y = 3;
+};
+
 int main()
 {
+    myclass myc;
+    cout << myc.y;
     int x[20]{};
     int t = 0;
     const int *const ****p = nullptr;
