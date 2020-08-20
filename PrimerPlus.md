@@ -738,3 +738,250 @@ MyClass operator double(){
 
 #### 友元函数更能自动适应类型转换
 
+# 第12章
+
+### 静态类成员
+
+在类中声明
+
+在类方法的文件中初始化
+
+用作用域运算符来指出类（不可访问但是可以初始化）
+
+### 复制构造函数
+
+重点在于构造，造出新的
+
+```c++
+MyClass new(old);
+MyClass new=old;
+MyClass new= MyClass ( old);
+MyClass *new = new MyClass(old);
+f(old)//not reference
+    
+MyClass(const MyClass & t){
+    num++;
+    p=new int  {*(t.p)};
+    normalx=t.normalx;
+}
+```
+
+//TODO 样例 见effective
+
+### 赋值运算符
+
+```c++
+MyClass& operator= (const MyClass & t){
+    if &t == this then
+        return *this;
+    else {
+        delete p;
+    	p=new int {*(t.p)};
+        return *this
+    }
+         
+}
+```
+
+### 比较函数 
+
+做成友元函数更加适合自动类型转换
+
+### 静态成员函数
+
+只能访问静态属性
+
+### []
+
+```c++
+char& operator [] (int i){
+    return str[i];
+}
+const char& operator [] (int i) const{
+    return str[i];
+}
+```
+
+### 没有默认的==运算符
+
+### 返回非const：
+
+operator =
+
+operator <<
+
+### 定位new
+
+要手动调用析构函数
+
+按照创建的反向顺序调用，完成后再delete buffer
+
+### 嵌套类
+
+如果是private那么只有通过类访问，如果public，可以通过作用域解析运算符访问
+
+### 成员初始化列表
+
+# 第13章
+
+### 子类初始化
+
+列表初始化调用基类的初始化，如果省略，调用默认
+
+### 定义放一起，分开实现
+
+### vitual 只用于原型
+
+### 只要希望会被用于继承就要考虑使用虚析构函数
+
+### 利用引用或者指针避免派生类被截断成基类
+
+### 友元函数不能是虚函数，可以让友元函数使用类函数
+
+### 重新定义同名的重载会覆盖所有基类的同名方法允许返回类型协变
+
+### 重载的时候需要重新定义每一个版本，仅仅调用基类的即可
+
+### 子类自动调用基类的赋值复制析构
+
+```c++
+next::next(const next& t): base (t)
+{
+    //new and copy
+}
+next& next::operator=(const next & t){
+    if (this=&rs){
+        return *this;
+    }
+    base::operator=(t);
+    delete;
+    new;
+    copy;
+    return *this;
+}
+```
+
+### 子类友元函数使用基类友元函数
+
+强制类型转换
+
+友元函数不能继承
+
+# 第14章
+
+### 列表初始化 先声明的先构造
+
+### 包含和私有继承的区别
+
+包含提供名了名的成员，私有未命名
+
+包含初始化用成员名，私有用类名
+
+### 访问基类对象
+
+强制类型转换
+
+### 需要私有继承：
+
+访问protected
+
+重定义虚函数
+
+### using重定义访问权限
+
+```c++
+using base::functionName;// 导入所有同名函数，只要函数名
+```
+
+### 多重继承
+
+#### vitual 写在两个派生的继承那里
+
+#### 需要对每个类写public
+
+#### 初始化
+
+需要调用基类，派生1和派生2的构造函数， 派生类的构造不会传递给基类
+
+而普通的派生类只能调用上面一级的构造函数。
+
+#### 用域解析来声明使用的是哪里的的函数
+
+#### 使用模块化的返回值，而不是递增式的
+
+#### 优先于的判定
+
+如果冲突的名字处在一条继承链， 派生优于基类，如果不在一条链上， 相等。
+
+如果存在最优，则可以不使用限定名
+
+### 类模板
+
+```c++
+template<typename T>
+class MyClass
+{
+  T function(T x);
+  bool inlinefinction (int x){
+      return true
+  }
+};
+
+template <typename T>
+T MyClass<T>::function(T x){
+    
+}
+```
+
+### 全部放在头文件中
+
+### 类内可以省略 Type类外部返回值不能省略
+
+### 非类型模板
+
+可以使用整数枚举引用指针
+
+不能改变参数的值也不能取地址
+
+### 可以使用默认参数
+
+```c++
+template <typename T1,typename T2=int>
+class MyClass{
+    
+};
+```
+
+### 具体化和实例化
+
+#### 一般都是隐式实例化
+
+####  显式实例化
+
+```c++
+template class Array<string,100>;
+```
+
+在模板的命名空间内
+
+#### 显式具体化
+
+```c++
+template <> class MyClass<int,int>
+{
+    
+}
+```
+
+#### 部分具体化
+
+```c++
+template <typename T1,typename T2> class MyClass{};
+template <typename T1> class MyClass <T1,int>{};
+template <typename T1*,typename T2> class MyClass{};
+```
+
+### 模板类中可以嵌套模板类
+
+
+
