@@ -915,7 +915,7 @@ using base::functionName;// 导入所有同名函数，只要函数名
 
 如果存在最优，则可以不使用限定名
 
-### ——
+## 类模板
 
 ```c++
 template<typename T>
@@ -991,6 +991,15 @@ template <template <typename T> class TempT> class Crab
     TempT<int>x;
 }
 Crab<Stack> t;
+```
+
+### 混用
+
+```c++
+template <template <typename T> class TempT,typename T1,typename T2> class Crab
+{
+    TempT<int>x;
+}
 ```
 
 
