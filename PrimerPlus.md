@@ -915,7 +915,7 @@ using base::functionName;// 导入所有同名函数，只要函数名
 
 如果存在最优，则可以不使用限定名
 
-### 类模板
+### ——
 
 ```c++
 template<typename T>
@@ -982,6 +982,16 @@ template <typename T1*,typename T2> class MyClass{};
 ```
 
 ### 模板类中可以嵌套模板类
+
+### 模板可以包含本身就是模板的参数
+
+```c++
+template <template <typename T> class TempT> class Crab
+{
+    TempT<int>x;
+}
+Crab<Stack> t;
+```
 
 
 
