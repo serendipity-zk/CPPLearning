@@ -1,5 +1,7 @@
 #include <iostream>
 #define N 0
+#include <stdexcept>
+void ferr();
 class bs
 {
 public:
@@ -30,8 +32,11 @@ public:
 };
 
 int myclass::sx = 0;
+
 int main()
 {
+
+    set_terminate(ferr);
     myclass myc;
     myclass tws;
     cout << myc.y;

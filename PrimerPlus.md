@@ -1,5 +1,7 @@
 # c++
 
+[TOC]
+
 ### C++存在整数除法
 
 5/4=1
@@ -804,6 +806,8 @@ const char& operator [] (int i) const{
 
 ### 没有默认的==运算符
 
+
+
 ### 返回非const：
 
 operator =
@@ -1002,5 +1006,260 @@ template <template <typename T> class TempT,typename T1,typename T2> class Crab
 }
 ```
 
+### 友元函数
 
+#### 非模板友元
+
+```c++
+friend void counts();
+```
+
+这个是所有模板的友元函数
+
+不能用hasFriend&
+
+```c++
+template <class T>
+class HasFriend
+{
+    friend void report (HasFriend<T>&)
+}
+```
+
+report 本身不是模板函数，只是一个以这个类型为输入的普通函数
+
+需要对每一个具体化都写一份
+
+```c++
+void report (HasFriend<int> t){
+    
+}
+void report (HasFriend<double> t){
+    
+}
+```
+
+
+
+#### 约束友元
+
+类定义前声明每个函数的模板
+
+```c++
+template <typename T> void counts();
+template <typename T> void report(T&);
+```
+
+函数中再次将模板声明为友元
+
+```c++
+template<typename T>
+class HasFriend
+{
+    friend void counts<T>();
+    friend void report<>(HasFriend<T>&);
+    //friend void report<HasFriend<T>>(HasFriend<T>&);
+}
+```
+
+调用时由于是友元函数，count不能推断出T是什么，所以要显式的指出，而report不用
+
+#### 非约束友元
+
+```c++
+template<typename T>
+class HasFriend
+{
+    template<typename C,typename D>
+    friend void report(C&,D);
+}
+```
+
+
+
+#### 区别
+
+约束：int属于int类，各自获得一个具体化
+
+非约束：每个具体化都是每个类具体化的友元
+
+### 别名
+
+```c++
+using anothername=oldname;
+typedef anothername=oldname;
+template <typename T>
+	using arrtype=std::array<T,12>;
+arrtype<int> t;
+```
+
+
+
+# 第15章
+
+## 友元
+
+### 友元类
+
+```c++
+friend class Remote
+```
+
+可以放在任何地方
+
+### 友元成员函数
+
+可以仅仅使得一部分函数是类的友元
+
+#### 前向声明
+
+```c++
+class Tv;
+
+class Remote{
+	//函数声明
+}
+class Tv{
+    friend void Remote::function(Tv&,int);
+    //声明和定义
+}
+inline void  Remote::function(Tv& t,int c){
+    
+}
+```
+
+1. 类型声明，定义所有要用到的类名称
+2. 函数声明，定义所有属性
+3. 内联函数定义
+
+### 共同的友元
+
+把函数同时写在两个类中作为friend
+
+### 嵌套类
+
+嵌套类写在public可以通过域解析访问
+
+### 可以在模板类中正常的用嵌套类
+
+## 异常
+
+### abort
+
+```c++
+#include <cstdlib>
+std::abort()
+```
+
+向std::cerr发送异常终止 不一定刷新文件缓冲区
+
+exit 刷新缓冲区，不显示消息
+
+### try catch
+
+```c++
+try
+{
+    
+}
+catch(char*){
+    
+}
+```
+
+### throw 和 return
+
+return 向上一层， throw一直到能处理为止
+
+### 传递的都是副本，但必须用引用接收
+
+### 按照排列顺序匹配
+
+catch(...){}
+
+### exception 头文件
+
+定义了exception类
+
+#### stdexcept
+
+- logic_error;
+
+  - domain_error；
+  - invalid_argument;
+  - length_error;
+  - out_of_range;
+
+- runtime_error;
+  - range_error;
+  - overflow_error;
+  - underflow_error;
+
+#### new
+
+bad_alloc
+
+有些编译器可以提供返回空指针的new
+
+```c++
+new(std::nothrow) int;
+new(std::nowthrow) int[];
+```
+
+#### set_terminate
+
+写在main里面，替换没被处理时调用的terminate函数
+
+#### 异常规范已经弃用
+
+#### 小心那些指针
+
+## RTTI
+
+只能用于包含虚函数的类
+
+### dynamic_cast
+
+```c++
+Base *p= dynamic_cast<Base *> (pp);
+```
+
+成功则为指针，失败空
+
+可以向下转换
+
+### typeid
+
+对于(*空指针)，返回bad_typeid
+
+```c++
+typeid(x1)==typeid(*p)
+```
+
+### type_info
+
+ ## 类型转换
+
+### dynamic_cast
+
+### const_cast
+
+```c++
+const High * pbar = &bar;
+High pb= const_cast <High *> (pbar)
+```
+
+但是更改pbar的值会使得结果不确定
+
+### static_cast
+
+当左到右或者右到左时隐式的即可转换
+
+允许不安全的转换
+
+允许向上向下
+
+### reinterpret_cast
+
+重新解释这块数据
 
