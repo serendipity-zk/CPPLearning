@@ -1263,3 +1263,339 @@ High pb= const_cast <High *> (pbar)
 
 重新解释这块数据
 
+# 第16章
+
+## String
+
+是basic_string<char> 即模板具体化
+
+### 构造函数
+
+```c++
+string(const char* s);
+string(size_type n,char c);
+string(string &);
+string();
+string(const char * s,size_type n);//即使超过末尾依然会复制
+template <typename Iter >
+string(Iter begin,Iter end);
+string(const string&,size_type pos=0,size_type n = npos);
+string(string &&)noexcept;
+staring(initializer_list<char>il);
+```
+
+### 读入
+
+```c++
+cin>>string;//保留
+getline(cin,string);//丢弃
+getline(cin,string,'s');
+```
+
+指定了分界符号之后，换行变成普通字符
+
+### size=length
+
+## 智能指针
+
+```c++
+#include<memory>
+shared_ptr<Int> t (new int 0);
+```
+
+### unique 赋值
+
+当unique来自右值时允许赋值，否则禁止
+
+### 随机打乱函数
+
+```c++
+for (int i =0 ; i<n;i++)
+{
+    Swap(a[i],a[randInt(i,n-1)]);
+}
+```
+
+### sort
+
+false：位置不正确
+
+#### 全排序
+
+a<b && b<a -> a==b
+
+#### 完整弱排序
+
+不符合上述条件
+
+### 区别前置和后置++
+
+```c++
+myclass& myclass::operator++()
+{
+    //前置
+}
+myclass myclass::operator++(int)
+{
+    //后置，不必指定名称
+}
+```
+
+
+
+### 迭代器类型
+
+- 输入迭代器
+- 输出迭代器
+- 正向迭代器
+- 双向迭代器
+- 随机访问迭代器
+
+### 适配器
+
+成为一个接口，取代原来迭代器的位置
+
+```c++
+#include <iterator>
+```
+
+#### ostream_iterator
+
+```c++
+ostream_iterator<int,char> out_iter(cout,"separater");
+copy(dice.begin(),dice.end(),out_iter);
+```
+
+#### istream_iterator
+
+```c++
+ostream_iterator<int,char> in_iter(cin);
+copy(in_iter,ostream_iterator<int,char>(),dice.begin());
+```
+
+#### insert_iterator
+
+```c++
+back_insert_iterator<vector<int>> back(dice);//dice是目的地
+front_insert_iterator<quene<int>> front(dice);
+insert_iterator<vector<int>> normal(dice,dice.begin());
+copy(x.begin(),x.end(), back);
+```
+
+## 函数对象
+
+包括函数名，函数指针，重载（）的类
+
+```c++
+double operator()(double x);
+```
+
+- 生成器
+- 一元函数
+- 二元函数
+- 谓词
+- 二元谓词
+
+```c++
+template <typename T>
+class TooBig
+{
+    private:
+    T cutoff;
+    public:
+    TooBig(const T& t):cutoff(t){};
+    bool operator()(const T &v){return v > cutoff;}
+};
+```
+
+#### 内置函数符
+
+```c++
+#include<functional>
+```
+
+所有内置运算符都有函数符
+
+### 自适应函数符
+
+携带了表示参数类型和返回类型的typedef
+
+### binder
+
+作用于自适应函数符
+
+```c++
+binder1st(f2,2.5) f1;
+binder2nd(f2,2.5) f1;
+```
+
+## 算法
+
+```c++
+#include <algorithm>
+#include<numeric>
+```
+
+## 其他库
+
+### valarray 实现数学运算
+
+### initializer_list
+
+#### 可以转换，不能隐式缩窄
+
+#### 对于参数数量固定的，可以用初始值的普通构造函数
+
+也可以使用{}的方法而不必用initializer_list
+
+```c++
+#include<initializer_list>
+double sum(const std::initializer_list& t)
+{
+    double s=0;
+    for (double x : t)
+    {
+        s+=x;
+    }
+    return s;
+}
+```
+
+## 第17章
+
+### iostream自动定义8个类
+
+cout cin cerr clog 以及对应的wchar_t
+
+### void * 
+
+打印地址
+
+### write
+
+允许超过尾部
+
+```c++
+cout.write((char*)&val,sizeof(long));
+```
+
+
+
+### 强制刷新缓冲区
+
+cout<<flush
+
+### 格式化
+
+#### 默认
+
+浮点数显示为6位有效数字，末尾0不显示
+
+如果指数大于等于6或者小于等于-5则用科学计数法，同样6位有效数字
+
+#### 进制
+
+```c++
+cout<<dec<<hex<<oct
+```
+
+#### 宽度（一次有效）
+
+```c++
+cout.width(12);
+```
+
+不会截断
+
+#### 填充字符
+
+```c++
+cout.fill("*");
+```
+
+#### 精度
+
+默认模式：有效数字
+
+定点模式，科学模式： 小数点之后的位数
+
+#### 打印末尾小数点和0
+
+```c++
+cout.setf(ios_base::showpoint);
+```
+
+#### setf(以下全部省略ios_base::)
+
+##### 一个参数的版本
+
+###### boolalpha
+
+bool类型输出变成true和false
+
+###### showbase
+
+0x00000000
+
+0132  （oct）
+
+###### uppercase
+
+十六进制大写，E也大写
+
+###### showpos
+
+基数为10正数加上+号
+
+##### 两个参数
+
+###### dec/oct/hex + basefield 
+
+###### fixed/scientific + floatfield
+
+###### left/right/internal + adjustfield
+
+internal : 符号和基数左对齐，数字右对齐
+
+#### 定点和科学
+
+显示末尾0
+
+指的是小数位数
+
+#### setf 套路
+
+```c++
+ios_base::fmtflags old=cout.setf(...);
+cout.setf(old,...)
+```
+
+#### unsetf
+
+#### 控制符
+
+- boolalpha
+- noboolalpha
+- showbase
+- showpoint
+- showpos
+- uppercase
+- internal
+- left
+- right
+- dec
+- hex
+- oct
+- fixed
+- scientific
+
+#### 扩展的控制符
+
+```c++
+#include <iomanip>
+```
+
+- setprecision()
+- setfill()
+- setw()
+

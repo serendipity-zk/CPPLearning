@@ -1,4 +1,6 @@
 #include <iostream>
+#include <climits>
+#include <string>
 #define N 0
 #include <stdexcept>
 void ferr();
@@ -35,14 +37,17 @@ int myclass::sx = 0;
 
 int main()
 {
-
-    set_terminate(ferr);
+    cout.precision(5);
+    cout << 0.0001234567 << endl;
     myclass myc;
     myclass tws;
     cout << myc.y;
     int x[20]{};
     int t = 0;
     const int *const ****p = nullptr;
+    string s;
+    getline(cin, s, 'l');
+    cout << s;
     const int *const **const *const *const *t2 = &p;
     const int *t3;
     int *t5;
