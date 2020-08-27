@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <climits>
 #include <string>
 #define N 0
@@ -38,6 +39,11 @@ int myclass::sx = 0;
 int main()
 {
     cout.precision(5);
+    ostringstream outstr;
+    outstr << "1235";
+    cout << outstr.str() << endl;
+    outstr << "fff";
+    cout << outstr.str() << endl;
     cout << 0.0001234567 << endl;
     myclass myc;
     myclass tws;

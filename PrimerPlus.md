@@ -1461,11 +1461,13 @@ double sum(const std::initializer_list& t)
 }
 ```
 
-## 第17章
+# 第17章
 
 ### iostream自动定义8个类
 
 cout cin cerr clog 以及对应的wchar_t
+
+## 输出
 
 ### void * 
 
@@ -1598,4 +1600,374 @@ cout.setf(old,...)
 - setprecision()
 - setfill()
 - setw()
+
+## 输入
+
+### 基数
+
+可以使用hex oct dec
+
+### 检查输入
+
+cin跳过空白，读取到与目标不匹配的地方
+
+一开始就不符合就会返回false 不会赋值
+
+### 流状态
+
+- eofbit 到达末尾为1
+- failbit 没有读取到预期的字符 或者IO失败
+- badbit 其他错误
+- goodbit 一种表示0的方法
+
+
+
+- good()检查所有错误位
+- eof bad 
+- fail 如果bad或者fail 则true
+
+### 清除
+
+clear 将state设置为参数，另外清空
+
+setstate 将state的某一位设置为参数，其余不变
+
+### 设置异常
+
+```c++
+cin.exception(failbit|badbit);
+try{}
+catch(ios_base::failure & bf)
+{
+    cout<<bf.what()<<endl;
+}
+```
+
+
+
+### 输入10个数
+
+```c++
+for (int i=0;i<10;i++)
+{
+    while (!cin>>x[i])
+    {
+       if (cin.fail()&&!cin.eof())
+       {
+           cin.clear();
+           while(!isspace(cin.get()));
+       }
+       else{
+            exit(1);
+       }
+    }
+}
+```
+
+### cin.get(char&)
+
+eof设置failbit 不会赋值
+
+### cin.get()
+
+文件尾返回EOF值
+
+### cin.ignore(length,untilchar)
+
+### getline
+
+空行不会fail 用==“”来检测  过多会fail
+
+数字包含/0 也就是说，和数组长度相同即可
+
+### get
+
+空行fail
+
+过长不会，用peek==“/n”
+
+### read(destination,length)
+
+不会加上换行符
+
+### peek
+
+### gcount
+
+最后一次不是>>的读取的数量
+
+### putback(char)
+
+放回去
+
+## 文件
+
+```c++
+ofstream ofs("filename");
+ifstream ifs("filename");
+ifstream ifs2;
+ifs2.open("filename");
+```
+
+### close
+
+关闭连接，但不关闭流
+
+程序结束自动关闭
+
+### 打开失败
+
+一般直接！fin
+
+但不能检测错误模式打开的文件
+
+更好的：!fin.is_open()
+
+### 打开模式
+
+- in
+- out
+- ate 移动到末尾
+- app
+- trunc 截断
+- binary
+
+ifstream 默认in
+
+ofstream 默认out|trunc
+
+想要追加 ("filename",out|app)
+
+### 二进制 
+
+便于读写
+
+```c++
+struct something
+{
+    int a;
+    double b;
+};
+something s;
+ofstream fout("filename",ios_base::out|ios_base::app|ios_base::binary);
+fout.write((char*)s,sizeof(s));
+ifstream fin("filename",ios_base::in|ios_base::binary);
+fin.read((char*)&s,sizeof (s));
+```
+
+不适合使用虚函数的类
+
+对于存在指针的也不适合
+
+### 随机访问
+
+#### 移动
+
+seekg 读入
+
+seekp 写入
+
+```c++
+fin.seekg(1000);
+fin.seekg(30,ios_base::beg);
+```
+
+- beg
+- cur
+- end
+
+#### 当前
+
+tellg
+
+tellp
+
+### 可以直接覆盖进去写入
+
+### 临时文件名
+
+```c++
+#include<stdio>
+char x[L_tmpnam];
+tmpnam(x);
+//最大TMP_MAX次
+```
+
+### 内核格式化
+
+即对字符串经行输入输出
+
+```c++
+ostringstream outstr;
+outstr<<x;
+outstr.str();
+```
+
+str一次之后可以继续写入
+
+```c++
+istringstream instr(string);
+```
+
+# 第18章
+
+
+
+### decltype
+
+可以复制出& 和const 相比auto更加智能
+
+想要成为引用，decltype((j))
+
+### noexcept
+
+### 允许类内成员初始化
+
+等同于列表初始化
+
+### 允许连续尖括号
+
+### 增加cbegin cend
+
+### 右值
+
+#### 字面常量（不包括字符串）表达式 函数 关联是一次性的
+
+#### 可以对右值引用取地址
+
+#### 移动语义相当于直接改了个名字
+
+```c++
+MyClass :: MyClass (MyClass &&f)
+{
+    ++count;
+    pc=f.pc;
+    f.pc=nullptr;
+}
+```
+
+#### 包括移动构造和移动赋值
+
+#### 强制move
+
+std::move(something)
+
+### 提供默认移动构造和移动赋值
+
+如果自己定义了移动或者赋值，那么另一个对应的也会消失
+
+### 删掉成员函数
+
+```c++
+void redo(double);
+void redo(int)=delete;
+```
+
+这样试图用int会报错
+
+### 允许在一个构造函数中用列表初始化调用另一个构造函数
+
+```c++
+Notes::Notes(int x,int y);
+Notes::Notes():Notes(1,2)
+{
+    
+}
+```
+
+### 继承构造函数
+
+```c++
+using C1::fn; //使得所有的fn都可用
+//可以重新定义某些版本
+using C1::C1; //继承构造函数
+
+```
+
+只初始化了基类部分
+
+### override
+
+指出我想要改一个虚函数，如果不同的话就会报错
+
+放在参数列表后面
+
+### final
+
+这个虚函数不能再被修改
+
+### Lambda
+
+```c++
+[&count](double x){count+=x%13==0;}
+```
+
+### 包装器 function
+
+包装函数 函数对象 lambda
+
+```c++
+std::function<double(char,int)> f;
+```
+
+用之前转换一下使得类型统一，避免模板具体化过多
+
+### 可变参数模板
+
+模板参数包
+
+```c++
+template<typename T,typename... Args>
+void show_list1(const T& x, const Args&... args)
+{
+    cout<< x<<endl;
+    show_list1(args...)
+}
+template<typename T>
+void show_list1(const T& x)
+{
+    cout<< x<<endl;
+}
+void show_list1(){}
+```
+
+### thread_local
+
+线程结束，变量消失 类似静态变量
+
+原子操作库和线程支持库
+
+- atomic
+- thread
+- mutex
+- condition_variable
+- future
+
+### 其他头文件
+
+- random  更多随机数的选择
+- chrono 时间
+- tuple
+- ratio 编译阶段有理数算术库
+- regex 正则
+
+### 共用体可以有构造和析构
+
+不能有虚函数
+
+### alignof 内存对齐方式
+
+### constexpr 常量表达式
+
+### assert 和static assert
+
+### 用户自定义字面量
+
+1001001b
+
+### TR1 和Boost
+
+
+
+> 全书完 2020.08.27
 
